@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">ProjectFinal</string>
+    <string name="source_metro">Enter Source Metro Station Name</string>
+    <string name="destination_metro">Enter Destination Metro Station Name</string>
+</resources>
