@@ -12,6 +12,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.projectfinal.model.PathFinder;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -79,16 +81,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 if (orangeLine.contains(source) && orangeLine.contains(destination)) {
                     startIndex = orangeLine.indexOf(source);
                     endIndex = orangeLine.indexOf(destination);
-                    goTowards(orangeLine, startIndex, endIndex);
-
+                    path = PathFinder.goTowards(orangeLine, startIndex, endIndex);
+                    StartSecondActivity(path);
                 } else if (greenLine.contains(source) && greenLine.contains(destination)) {
                     startIndex = greenLine.indexOf(source);
                     endIndex = greenLine.indexOf(destination);
-                    goTowards(greenLine, startIndex, endIndex);
+                    path = PathFinder.goTowards(greenLine, startIndex, endIndex);
                 } else if (blueLine.contains(source) && blueLine.contains(destination)) {
                     startIndex = blueLine.indexOf(source);
                     endIndex = blueLine.indexOf(destination);
-                    goTowards(blueLine, startIndex, endIndex);
+                    path = PathFinder.goTowards(blueLine, startIndex, endIndex);
+                    StartSecondActivity(path);
                 } else if ((orangeLine.contains(source) && blueLine.contains(destination)) || (blueLine.contains(source) && orangeLine.contains(destination))) {
 
                     if (orangeLine.indexOf(source) != -1) {
@@ -101,8 +104,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         } else {
                             interSectionName = "Jean Talon";
                         }
-                        goTowardsInterSection(orangeLine, blueLine, startIndex, endIndex, interSectionName);
-
+                        path = PathFinder.goTowardsInterSection(orangeLine, blueLine, startIndex, endIndex, interSectionName);
+                        StartSecondActivity(path);
                     } else {
                         // Start From Blue Line
                         String interSectionName = "snowdon";
@@ -113,7 +116,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //                        } else {
 //                            interSectionName = "snowdon";
 //                        }
-                        goTowardsInterSection(blueLine, orangeLine, startIndex, endIndex, interSectionName);
+                        path = PathFinder.goTowardsInterSection(blueLine, orangeLine, startIndex, endIndex, interSectionName);
+                        StartSecondActivity(path);
                     }
                 } else if ((orangeLine.contains(source) && greenLine.contains(destination)) || (greenLine.contains(source) && orangeLine.contains(destination))) {
 
@@ -127,8 +131,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         } else {
                             interSectionName = "Berri UQAM";
                         }
-                        goTowardsInterSection(orangeLine, greenLine, startIndex, endIndex, interSectionName);
-
+                        path = PathFinder.goTowardsInterSection(orangeLine, greenLine, startIndex, endIndex, interSectionName);
+                        StartSecondActivity(path);
                     } else {
                         // Start From Green Line
                         String interSectionName;
@@ -139,7 +143,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         } else {
                             interSectionName = "Berri UQAM";
                         }
-                        goTowardsInterSection(greenLine, orangeLine, startIndex, endIndex, interSectionName);
+                        path = PathFinder.goTowardsInterSection(greenLine, orangeLine, startIndex, endIndex, interSectionName);
+                        StartSecondActivity(path);
                     }
 
                 } else if ((blueLine.contains(source) && greenLine.contains(destination)) || (greenLine.contains(source) && blueLine.contains(destination))) {
@@ -162,7 +167,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             interSectionGreeen = "Berri UQAM";
                         }
 
-                        goTowardsGreenBlue(blueLine, greenLine, orangeLine, startIndex, endIndex, interSectionBlue, interSectionGreeen);
+                        path = PathFinder.goTowardsGreenBlue(blueLine, greenLine, orangeLine, startIndex, endIndex, interSectionBlue, interSectionGreeen);
+                        StartSecondActivity(path);
                     } else {
                         // Start From Green Line
                         String interSectionBlue;
@@ -181,7 +187,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         } else {
                             interSectionBlue = "Jean Talon";
                         }
-                        goTowardsGreenBlue(greenLine, blueLine, orangeLine, startIndex, endIndex, interSectionGreeen, interSectionBlue);
+                        path = PathFinder.goTowardsGreenBlue(greenLine, blueLine, orangeLine, startIndex, endIndex, interSectionGreeen, interSectionBlue);
+                        StartSecondActivity(path);
                     }
 
                 } else {
@@ -198,110 +205,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    private void goTowardsGreenBlue(ArrayList<String> lineOneStart, ArrayList<String> lineTwoEnd, ArrayList<String> lineMiddle, int startIndex, int endIndex, String interSectionOne, String interSectionTwo) {
-        path.clear();
-        // First Line
-        if (startIndex < lineOneStart.indexOf(interSectionOne)) {
-            // go towords
-            for (int i = startIndex; i <= lineOneStart.indexOf(interSectionOne); i++) {
-                path.add(lineOneStart.get(i));
-            }
-        } else {
-            // go back
-            for (int i = startIndex; i >= lineOneStart.indexOf(interSectionOne); i--) {
-                path.add(lineOneStart.get(i));
-            }
-        }
-
-        // Middle Line
-        if (lineMiddle.indexOf(interSectionOne) > lineMiddle.indexOf(interSectionTwo)) {
-            // go towords
-
-//            Log.i("Tag1", "interSectionOne " + lineMiddle.indexOf(interSectionOne) + "\ninterSectionTwo" +
-//                    lineMiddle.indexOf(interSectionTwo));
-
-            for (int i = lineMiddle.indexOf(interSectionOne); i >= lineMiddle.indexOf(interSectionTwo); i--) {
-                path.add(lineMiddle.get(i));
-            }
-        } else {
-            // go back
-            for (int i = lineMiddle.indexOf(interSectionOne); i <= lineMiddle.indexOf(interSectionTwo); i++) {
-                path.add(lineMiddle.get(i));
-            }
-        }
-
-        // End Line
-        if (endIndex > lineTwoEnd.indexOf(interSectionTwo)) {
-            // go towords
-            for (int i = lineTwoEnd.indexOf(interSectionTwo); i <= endIndex; i++) {
-                path.add(lineTwoEnd.get(i));
-            }
-        } else {
-            // go back
-            for (int i = lineTwoEnd.indexOf(interSectionTwo); i >= endIndex; i--) {
-                path.add(lineTwoEnd.get(i));
-            }
-        }
-
-        Log.i("Tag2", "\nStart Index : " + startIndex +
-                "\nEnd Index " + endIndex + "\nPath " + path);
-
-        Intent intent = new Intent(this, SecondActivity.class);
-        intent.putExtra("path", path);
-        startActivity(intent);
-    }
-
-    private void goTowardsInterSection(ArrayList<String> lineOneStart, ArrayList<String> lineTwoEnd, int startIndex, int endIndex, String inteSectionName) {
-        path.clear();
-        // First Line
-        if (startIndex < lineOneStart.indexOf(inteSectionName)) {
-            // go towords
-            for (int i = startIndex; i <= lineOneStart.indexOf(inteSectionName); i++) {
-                path.add(lineOneStart.get(i));
-            }
-        } else {
-            // go back
-            for (int i = startIndex; i >= lineOneStart.indexOf(inteSectionName); i--) {
-                path.add(lineOneStart.get(i));
-            }
-        }
-
-        // Second Line
-        if (endIndex > lineTwoEnd.indexOf(inteSectionName)) {
-            // go towords
-            for (int i = lineTwoEnd.indexOf(inteSectionName); i <= endIndex; i++) {
-                path.add(lineTwoEnd.get(i));
-            }
-        } else {
-            // go back
-            for (int i = lineTwoEnd.indexOf(inteSectionName); i >= endIndex; i--) {
-                path.add(lineTwoEnd.get(i));
-            }
-        }
-
-        Log.i("Tag2", "\nStart Index : " + startIndex +
-                "\nEnd Index " + endIndex + "\nPath " + path);
-
-        Intent intent = new Intent(this, SecondActivity.class);
-        intent.putExtra("path", path);
-        startActivity(intent);
-    }
-
-    private void goTowards(ArrayList<String> line, int startIndex, int endIndex) {
-        path.clear();
-        if (startIndex < endIndex) {
-            for (int i = startIndex; i <= endIndex; i++) {
-                path.add(line.get(i));
-            }
-        } else {
-            for (int i = startIndex; i >= endIndex; i--) {
-                path.add(line.get(i));
-            }
-        }
-
-        Log.i("Tag2", "\nStart Index : " + startIndex +
-                "\nEnd Index " + endIndex + "\nPath " + path);
-
+    private void StartSecondActivity(ArrayList<String> path) {
         Intent intent = new Intent(this, SecondActivity.class);
         intent.putExtra("path", path);
         startActivity(intent);
